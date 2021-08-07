@@ -1,5 +1,6 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 const port = 4000;
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
@@ -16,7 +17,6 @@ app.use(fileUpload());
 
 const uri =
   "mongodb+srv://rubel-ahmed:nAyqSovpijg0p4v1@cluster0.jmsmx.mongodb.net/Book?retryWrites=true&w=majority";
-
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -57,6 +57,11 @@ client.connect((err) => {
     addCollection.find().toArray((err, result) => {
       res.send(result);
     });
+  });
+  app.get("/add/:id", (req, res) => {
+    addCollection
+      .find({ _id: ObjectId(req.params.id) })
+      .toArray((err, item) => res.send(item[0]));
   });
   // folder fill set up start.......................................................
   // app.post("/addADoctor", (req, res) => {
